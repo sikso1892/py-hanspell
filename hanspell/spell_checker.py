@@ -51,7 +51,7 @@ def _get_passport_key():
 def check(text, passport_key=None):
     """
     매개변수로 입력받은 한글 문장의 맞춤법을 체크합니다.
-    
+
     passportKey 인자를 입력할 경우, 해당 키를 사용하여 맞춤법을 체크합니다.
     passportKey 인자를 입력하지 않을 경우, 세션에서 Key 값을 생성하여 맞춤법을 체크합니다.
     """
@@ -65,26 +65,25 @@ def check(text, passport_key=None):
     # 최대 500자까지 가능.
     if len(text) > 500:
         return Checked(result=False)
-    
+
     if not passport_key:
         passport_key = _get_passport_key()
-    
+
     payload = {"passportKey": passport_key, "color_blindness": "0", "q": text}
-        
 
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
         "referer": "https://search.naver.com/",
     }
-    
+
     start_time = time.time()
     r = _agent.get(base_url, params=payload, headers=headers)
     passed_time = time.time() - start_time
 
     data = json.loads(r.text)
-    if error := data["message"].get('error'):
+    if error := data["message"].get("error"):
         raise Exception(error)
-    
+
     _html = data["message"]["result"]["html"]
     result = {
         "result": True,
