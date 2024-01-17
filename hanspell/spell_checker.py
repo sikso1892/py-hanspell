@@ -92,6 +92,7 @@ def check(text, passport_key=None):
         "errors": data["message"]["result"]["errata_count"],
         "time": passed_time,
         "words": OrderedDict(),
+        "rendered_sentence_errors": list()
     }
 
     # 띄어쓰기로 구분하기 위해 태그는 일단 보기 쉽게 바꿔둠.
@@ -139,6 +140,7 @@ def check(text, passport_key=None):
             check_result = CheckResult.STATISTICAL_CORRECTION
             word = word.replace("<blue>", "")
         result["words"][word] = check_result
+        result["rendered_sentence_errors"].append((word, check_result))
 
     result = Checked(**result)
 
